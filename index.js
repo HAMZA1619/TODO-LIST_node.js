@@ -1,5 +1,5 @@
 const http = require("http");
-const Todo = require("./controllers");
+const Controller = require("./controllers");
 const { getReqData } = require("./data");
 
 const PORT = process.env.PORT || 5000;
@@ -11,7 +11,7 @@ const server = http.createServer(async (req, res) => {
            
             const table = req.url.split("/")[1];
             const id = req.url.split("/")[2];
-            const todos = await new Todo().get(table,id);
+            const todos = await new Controller().get(table,id);
             res.writeHead(200, { "Content-Type": "application/json" });
             res.end(JSON.stringify(todos));
         } catch (error) {
@@ -22,7 +22,7 @@ const server = http.createServer(async (req, res) => {
 
    else if (req.url.match(/([a-z]+)/) && req.method === "GET") {
         const table = req.url.split("/")[1];
-        const todos = await new Todo().getAll(table);
+        const todos = await new Controller().getAll(table);
         res.writeHead(200, { "Content-Type": "application/json" });
         res.end(JSON.stringify(todos));
     }
@@ -32,7 +32,7 @@ const server = http.createServer(async (req, res) => {
          
             const table = req.url.split("/")[1];
             const id = req.url.split("/")[2];
-            let message = await new Todo().delete(table,id);
+            let message = await new Controller().delete(table,id);
             res.writeHead(200, { "Content-Type": "application/json" });
             res.end(JSON.stringify({ message }));
         } catch (error) {
@@ -47,7 +47,7 @@ const server = http.createServer(async (req, res) => {
             const table = req.url.split("/")[1];
             const id = req.url.split("/")[2];
             const data = await getReqData(req);
-            let updated_todo = await new Todo().update(JSON.parse(data),table,id);
+            let updated_todo = await new Controller().update(JSON.parse(data),table,id);
             res.writeHead(200, { "Content-Type": "application/json" });
             res.end(JSON.stringify(updated_todo));
         } catch (error) {
@@ -60,7 +60,7 @@ const server = http.createServer(async (req, res) => {
     else if (req.url.match(/([a-z]+)/) && req.method === "POST") {
         const table = req.url.split("/")[1];
         let todo_data = await getReqData(req);
-        let todo = await new Todo().create(table,JSON.parse(todo_data));
+        let todo = await new Controller().create(table,JSON.parse(todo_data));
         res.writeHead(200, { "Content-Type": "application/json" });
         res.end(JSON.stringify(todo));
     }
